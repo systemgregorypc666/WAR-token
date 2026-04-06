@@ -47,6 +47,19 @@ El sistema se basa en una arquitectura de tres capas (3-Tier) para garantizar el
 
 ---
 
+WAR-token es una herramienta de ingeniería financiera y geopolítica.
+que observa los movimientos financieros de EE. UU.)
+Consejo Pro: No lo digas como una promesa ("Voy a pagar la deuda"), dilo como una propuesta técnica ("El objetivo es demostrar un modelo de autoliquidación aplicable a deudas soberanas").
+
+⚖️ Disclaimer (Aviso Legal)
+IMPORTANTE: Este software se proporciona "tal cual", con fines de investigación, desarrollo y demostración técnica de modelos de ingeniería financiera aplicados a la blockchain.
+
+No es Asesoría Financiera: El contenido de este repositorio no constituye asesoría de inversión, legal o financiera.
+
+Responsabilidad: El autor (José Gregorio Hernández Calderón) y System Gregory PC no se hacen responsables por el uso que terceros den a este código, ni por pérdidas económicas derivadas de su implementación en entornos reales.
+
+Cumplimiento: Es responsabilidad del usuario asegurarse de que cualquier implementación cumpla con las leyes locales e internacionales (OFAC, SEC, etc.).
+
 ## 🛠️ Instalación y Configuración Local
 
 1. **Clonar el repositorio:**
