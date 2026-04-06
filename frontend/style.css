@@ -1,0 +1,62 @@
+/* 1. Definición de Variables de Marca */
+:root {
+    --gold-glow: rgba(234, 179, 8, 0.3);
+    --burn-red: #ef4444;
+    --deep-slate: #0f172a;
+}
+
+/* 2. Estética de Fondo y Scroll */
+body {
+    background: radial-gradient(circle at top right, #1e293b, #0f172a);
+    min-height: 100vh;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1e293b;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 10px;
+}
+
+/* 3. Animación de "Quemado" (Efecto Visual de Liquidación) */
+@keyframes burn-flicker {
+    0% { box-shadow: 0 0 10px var(--burn-red); }
+    50% { box-shadow: 0 0 30px var(--burn-red); opacity: 0.8; }
+    100% { box-shadow: 0 0 10px var(--burn-red); }
+}
+
+.burn-active {
+    animation: burn-flicker 0.5s infinite;
+    border-color: var(--burn-red) !important;
+}
+
+/* 4. Efecto de Cristal para los Paneles (Glassmorphism) */
+.glass-panel {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.glass-panel:hover {
+    border-color: rgba(234, 179, 8, 0.4);
+    transform: translateY(-2px);
+}
+
+/* 5. Estilo para el Input de Datos */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* 6. Glow de Oro para Títulos */
+.text-gold-glow {
+    text-shadow: 0 0 15px var(--gold-glow);
+}
