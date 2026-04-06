@@ -1,0 +1,20 @@
+name = "war-token-api"
+main = "src/index.js" # O la ruta donde esté tu código JavaScript del Worker
+compatibility_date = "2024-04-01"
+
+# 1. Configuración de Producción
+[vars]
+CONTRACT_ADDRESS = "0x..." # Dirección de tu contrato WAR-token
+NETWORK = "mainnet"
+
+# 2. Base de Datos KV (Muy importante para el Oráculo)
+# Reemplaza el ID con el que te dio Cloudflare al crear el KV en el panel
+[[kv_namespaces]]
+binding = "WAR_STORAGE"
+id = "tu_id_de_kv_aqui"
+
+# 3. Rutas (Opcional)
+# Si quieres que el worker responda en un subdominio específico
+# routes = [
+# 	{ pattern = "api.war-token.pages.dev", custom_domain = true }
+# ]
