@@ -1,0 +1,13 @@
+# Web Framework
+Flask==3.0.2
+gunicorn==21.2.0
+
+# Blockchain Integration
+web3==6.15.1
+eth-account==0.11.0
+
+# Environment & Security
+python-dotenv==1.0.1
+
+# API & Data (Para el Oráculo)
+requests==2.31.0
