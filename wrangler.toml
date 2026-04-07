@@ -1,11 +1,12 @@
 name = "war-token-api"
-main = "src/index.js" # Asegúrate de que tu código esté en la carpeta /src
+main = "src/index.js"
 compatibility_date = "2024-04-01"
 
-# Esto le dice a Cloudflare que no hay un comando de construcción (Build)
-[build]
-command = "" 
-
+# Configuración de la base de datos KV
 [[kv_namespaces]]
 binding = "WAR_STORAGE"
-id = "TU_ID_DE_KV_AQUI" # Pega aquí el ID que copiaste antes
+id = "450a4812d97d4038a1891b38529159b9"
+
+# Desactivar comandos de build manuales para evitar el error de las 19:46
+[build]
+command = ""
