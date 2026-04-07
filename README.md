@@ -47,6 +47,59 @@ El sistema se basa en una arquitectura de tres capas (3-Tier) para garantizar el
 
 ---
 
+# 🪙 Proyecto Genesis-IA: WAR-token (Oracle System)
+**Desarrollado por: System Gregory PC**
+
+Este repositorio contiene la infraestructura completa para el ecosistema **WAR-token**, un activo digital vinculado al valor de referencia del oro, gestionado mediante un Oráculo automatizado y una API descentralizada en Cloudflare.
+
+---
+
+## 🚀 Arquitectura del Sistema
+
+El sistema se divide en tres capas fundamentales que trabajan en sincronía:
+
+1.  **Capa de Datos (Oráculo Python):** Un script local que consulta mercados de metales preciosos y propaga la información con seguridad cifrada.
+2.  **Capa de Lógica (Cloudflare Workers):** Una API programada en JavaScript que valida los datos del Oráculo y los almacena en una base de datos de baja latencia (**KV Storage**).
+3.  **Capa de Contrato (Smart Contracts):** Un contrato inteligente BEP-20 desplegado en la **BNB Smart Chain** que rige las reglas de emisión y quema del token.
+
+---
+
+## 🛠️ Tecnologías Utilizadas
+
+* **Solidity 0.8.20:** Contratos inteligentes con estándares OpenZeppelin.
+* **JavaScript (ES6):** Motor de la API en Cloudflare Workers.
+* **Python 3.x:** Scripting del Oráculo y manejo de peticiones HTTP.
+* **Cloudflare KV:** Almacenamiento persistente de datos de mercado.
+
+---
+
+## 📦 Estructura de Carpetas
+
+| Carpeta | Descripción |
+| :--- | :--- |
+| `/contracts` | Código fuente del contrato `WAR_Token.sol`. |
+| `/src` | Lógica del Worker de Cloudflare (`index.js`). |
+| `/frontend` | Interfaz web del Dashboard de usuario. |
+| `oracle.py` | Script del Oráculo para actualización de precios. |
+| `wrangler.toml` | Configuración de despliegue para Cloudflare. |
+
+---
+
+## ⚙️ Configuración y Despliegue
+
+### 1. Variables de Entorno (Secrets)
+Para que el sistema sea seguro, es necesario configurar el `SECRET_TOKEN` en el panel de Cloudflare para validar las peticiones del Oráculo.
+
+### 2. Ejecución del Oráculo
+```bash
+# Instalar dependencias
+pip install requests
+
+# Ejecutar actualización manual
+python oracle.py
+
+
+
 WAR-token es una herramienta de ingeniería financiera y geopolítica.
 que observa los movimientos financieros de EE. UU.)
 Consejo Pro: No lo digas como una promesa ("Voy a pagar la deuda"), dilo como una propuesta técnica ("El objetivo es demostrar un modelo de autoliquidación aplicable a deudas soberanas").
