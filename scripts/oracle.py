@@ -1,40 +1,37 @@
-import os
-import time
 import requests
-from web3 import Web3
-from dotenv import load_dotenv
+import time
 
-# Cargamos las llaves desde el .env que tienes en la raíz o backend
-load_dotenv()
+# Configuración de System Gregory PC
+WORKER_URL = "https://war-token-api.genesis-ia.workers.dev/"
+SECRET_TOKEN = "Goyo_2026_Secure_99" # Debe ser igual a la del panel de Cloudflare
 
-# Configuración técnica
-RPC_URL = os.getenv("BLOCKCHAIN_RPC")
-PRIVATE_KEY = os.getenv("PRIVATE_KEY")
-CONTRACT_ADDR = os.getenv("CONTRACT_ADDRESS")
-# API de metales (ejemplo: GoldAPI.io o similar)
-GOLD_API_URL = "https://www.goldapi.io/api/XAU/USD" 
+def obtener_precio_oro():
+    # Aquí puedes usar cualquier API de metales (ej: GoldAPI, MetalPrice, etc.)
+    # Por ahora simulamos el dato para probar la conexión
+    return 2355.50 
 
-w3 = Web3(Web3.HTTPProvider(RPC_URL))
-account = w3.eth.account.from_key(PRIVATE_KEY)
+def enviar_a_cloudflare(precio):
+    payload = {
+        "precio": precio,
+        "timestamp": time.time(),
+        "origen": "Nodo-Goyo-Táchira"
+    }
+    
+    headers = {
+        "Authorization": SECRET_TOKEN,
+        "Content-Type": "application/json"
+    }
 
-def get_gold_price():
-    headers = {'x-access-token': os.getenv("MARKET_API_KEY")}
-    response = requests.get(GOLD_API_URL, headers=headers)
-    return response.json()['price']
-
-def update_liquidation(price):
-    # Aquí es donde el script "habla" con tu Smart Contract
-    print(f"🚀 Actualizando sistema con precio de Oro: ${price}")
-    # Nota: Aquí llamarías a la función del contrato que definimos antes
-    # tx = contract.functions.selfLiquidate(amount, "Oracle Update").build_transaction(...)
+    try:
+        response = requests.post(WORKER_URL, json=payload, headers=headers)
+        if response.status_code == 200:
+            print(f"✅ Éxito: Oro a ${precio} enviado a Genesis-IA")
+        else:
+            print(f"❌ Error {response.status_code}: {response.text}")
+    except Exception as e:
+        print(f"⚠️ Error de conexión: {e}")
 
 if __name__ == "__main__":
-    while True:
-        try:
-            current_price = get_gold_price()
-            update_liquidation(current_price)
-            # Esperar 1 hora antes de la siguiente actualización
-            time.sleep(3600) 
-        except Exception as e:
-            print(f"❌ Error en el Oráculo: {e}")
-            time.sleep(60)
+    print("🚀 Iniciando Oráculo Genesis-IA...")
+    precio_actual = obtener_precio_oro()
+    enviar_a_cloudflare(precio_actual)
