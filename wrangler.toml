@@ -1,13 +1,11 @@
 name = "war-token-api"
-main = "src/index.js"
+main = "src/index.js" # Asegúrate de que tu código esté en la carpeta /src
 compatibility_date = "2024-04-01"
 
-# Variables de entorno para el contrato
-[vars]
-CONTRACT_ADDRESS = "0x0000000000000000000000000000000000000000"
-NETWORK = "BNB_SMART_CHAIN"
+# Esto le dice a Cloudflare que no hay un comando de construcción (Build)
+[build]
+command = "" 
 
-# Configuración de la base de datos de precios (KV)
 [[kv_namespaces]]
 binding = "WAR_STORAGE"
-id = "PEGAR_AQUI_EL_ID_DE_TU_KV"
+id = "TU_ID_DE_KV_AQUI" # Pega aquí el ID que copiaste antes
