@@ -66,3 +66,5 @@ Cumplimiento: Es responsabilidad del usuario asegurarse de que cualquier impleme
    ```bash
    git clone [https://github.com/TU_USUARIO/WAR-token.git](https://github.com/TU_USUARIO/WAR-token.git)
    cd WAR-token
+
+https://war-token-api.genesis-ia.workers.dev/
