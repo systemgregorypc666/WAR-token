@@ -1,44 +1,63 @@
-import requests
 import time
+import sys
 
-# --- CONFIGURACIÓN ---
-# La URL que ya tienes funcionando
+# Intentar importar requests, si no, dar instrucciones claras
+try:
+    import requests
+except ImportError:
+    print("\n❌ Error: No tienes instalada la librería 'requests'.")
+    print("👉 Solución: Ejecuta este comando en tu terminal: pip install requests\n")
+    sys.exit(1)
+
+# --- CONFIGURACIÓN DE SYSTEM GREGORY PC ---
+# Esta es la URL de tu cerebro en la nube
 WORKER_URL = "https://war-token-api.genesis-ia.workers.dev/"
 
-# DEBE SER EXACTAMENTE LA MISMA QUE PUSISTE EN CLOUDFLARE
+# CLAVE DE SEGURIDAD: Debe ser IDÉNTICA a la que pusiste en el panel de Cloudflare
 SECRET_TOKEN = "Goyo_2026_Secure_99" 
 
 def enviar_precio_oro(precio):
-    print(f"Propagando precio: ${precio} USD...")
+    """
+    Envía el precio del oro al Worker de Cloudflare usando una petición POST segura.
+    """
+    print(f"🛰️ Preparando envío: Precio Oro a ${precio} USD...")
     
-    # Preparamos el paquete de datos
+    # El 'paquete' de datos que viaja por internet
     payload = {
         "precio": precio,
-        "origen": "System Gregory PC - Nodo Central"
+        "timestamp": int(time.time()),
+        "nodo": "System-Gregory-PC-Tachira"
     }
     
-    # Añadimos tu firma de seguridad (el Secreto)
+    # Las 'credenciales' para que el Worker te deje pasar
     headers = {
         "Authorization": SECRET_TOKEN,
         "Content-Type": "application/json"
     }
 
     try:
-        # Enviamos la información a la nube
-        response = requests.post(WORKER_URL, json=payload, headers=headers)
+        # Realizamos la conexión
+        response = requests.post(WORKER_URL, json=payload, headers=headers, timeout=10)
         
         if response.status_code == 200:
-            print("✅ ¡Éxito! El Worker recibió y guardó el precio en el KV.")
+            print("✅ ¡ÉXITO! Datos sincronizados con Genesis-IA.")
+            print(f"📡 Respuesta del servidor: {response.text}")
         elif response.status_code == 401:
-            print("❌ Error de Seguridad: El SECRET_TOKEN no coincide.")
+            print("🚫 ERROR DE SEGURIDAD: El SECRET_TOKEN es incorrecto.")
+            print("👉 Revisa el panel de 'Variables y Secretos' en Cloudflare.")
         else:
-            print(f"⚠️ Error del Servidor ({response.status_code}): {response.text}")
+            print(f"⚠️ ERROR {response.status_code}: {response.text}")
             
+    except requests.exceptions.ConnectionError:
+        print("🔥 ERROR DE RED: No se pudo contactar con el Worker. Revisa tu internet.")
     except Exception as e:
-        print(f"🔥 Error de conexión: {e}")
+        print(f"❓ ERROR INESPERADO: {e}")
 
 if __name__ == "__main__":
-    # Prueba manual: enviamos un precio de ejemplo
-    # En el futuro, aquí conectaremos la API de metales en vivo
-    precio_test = 2385.50 
-    enviar_precio_oro(precio_test)
+    print("--- INICIANDO ORÁCULO GENESIS-IA ---")
+    
+    # Valor de prueba (Pronto lo cambiaremos por una API real)
+    precio_actual = 2385.50 
+    
+    enviar_precio_oro(precio_actual)
+    print("--- FIN DE LA OPERACIÓN ---")
