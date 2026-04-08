@@ -6,17 +6,21 @@ export default {
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
     };
 
-    if (request.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+    // 1. Responder a validaciones de navegador (CORS)
+    if (request.method === "OPTIONS") {
+      return new Response(null, { headers: corsHeaders });
+    }
 
+    // 2. LÓGICA DE RECEPCIÓN (POST) - Cuando tu PC envía datos
     if (request.method === "POST") {
       try {
         const data = await request.json();
         
-        // Guardamos usando el nodo_id como llave
+        // Guardamos los datos en WAR_STORAGE usando el nodo_id como llave
         await env.WAR_STORAGE.put(data.nodo_id, JSON.stringify({
           valor: data.valor_generado,
           fecha: new Date().toISOString(),
-          proyecto: "WAR-token"
+          proyecto: data.investigacion || "WAR-token"
         }));
 
         return new Response(JSON.stringify({ message: "✅ Valor registrado" }), { 
@@ -24,31 +28,37 @@ export default {
           headers: { ...corsHeaders, "Content-Type": "application/json" } 
         });
       } catch (err) {
-        return new Response("Error en JSON", { status: 400 });
+        return new Response(JSON.stringify({ error: "Error en JSON" }), { 
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
       }
     }
 
-    // Al entrar por el navegador (GET), listamos las llaves guardadas
-    const stats = await env.WAR_STORAGE.list();
-    return new Response(JSON.stringify(stats), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" }
-    });
-  }
-};
-// 3. LÓGICA PARA VER DATOS (GET)
+    // 3. LÓGICA DE VISUALIZACIÓN (GET) - Cuando entras desde el navegador
     try {
-      // Obtenemos los datos específicos de tu nodo
-      const data = await env.WAR_STORAGE.get("System_Gregory_Tachira_01");
-      const parsedData = data ? JSON.parse(data) : { mensaje: "Sin datos aún" };
+      // Buscamos específicamente el registro de tu nodo principal
+      const dataRaw = await env.WAR_STORAGE.get("System_Gregory_Tachira_01");
+      
+      // Si el nodo ha enviado datos, los procesamos; si no, enviamos un estado inicial
+      const registro = dataRaw ? JSON.parse(dataRaw) : { mensaje: "Nodo en espera de sincronización..." };
 
-      return new Response(JSON.stringify({
-        proyecto: "WAR-token",
+      const responseBody = {
+        red: "WAR-token",
         estado_red: "Online",
-        ultimo_registro: parsedData,
-        timestamp_consulta: new Date().toISOString()
-      }), {
+        nodo_principal: "System_Gregory_Tachira_01",
+        datos_actuales: registro,
+        timestamp_servidor: new Date().toISOString()
+      };
+
+      return new Response(JSON.stringify(responseBody), {
         headers: { ...corsHeaders, "Content-Type": "application/json" }
       });
     } catch (e) {
-      return new Response("Error leyendo base de datos", { status: 500 });
+      return new Response(JSON.stringify({ error: "Error leyendo base de datos" }), { 
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
     }
+  }
+};
