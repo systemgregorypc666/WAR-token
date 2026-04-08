@@ -1,63 +1,70 @@
 import time
 import sys
+import json
+from datetime import datetime
 
-# Intentar importar requests, si no, dar instrucciones claras
+# Intentar importar requests
 try:
     import requests
 except ImportError:
-    print("\n❌ Error: No tienes instalada la librería 'requests'.")
-    print("👉 Solución: Ejecuta este comando en tu terminal: pip install requests\n")
+    print("\n❌ Error: No tienes 'requests'. Ejecuta: pip install requests\n")
     sys.exit(1)
 
 # --- CONFIGURACIÓN DE SYSTEM GREGORY PC ---
-# Esta es la URL de tu cerebro en la nube
 WORKER_URL = "https://war-token-api.genesis-ia.workers.dev/"
-
-# CLAVE DE SEGURIDAD: Debe ser IDÉNTICA a la que pusiste en el panel de Cloudflare
+# Asegúrate de que este TOKEN sea el mismo que pusiste en Cloudflare
 SECRET_TOKEN = "Goyo_2026_Secure_99" 
 
-def enviar_precio_oro(precio):
+def enviar_datos_al_nodo(valor, tema):
     """
-    Envía el precio del oro al Worker de Cloudflare usando una petición POST segura.
+    Envía datos de investigación al almacén KV de Cloudflare.
     """
-    print(f"🛰️ Preparando envío: Precio Oro a ${precio} USD...")
+    print(f"📡 [{datetime.now().strftime('%H:%M:%S')}] Iniciando sincronización...")
     
-    # El 'paquete' de datos que viaja por internet
+    # IMPORTANTE: Estos nombres deben coincidir exactamente con tu index.js
     payload = {
-        "precio": precio,
-        "timestamp": int(time.time()),
-        "nodo": "System-Gregory-PC-Tachira"
+        "nodo_id": "System_Gregory_Tachira_01",
+        "valor_generado": valor,
+        "investigacion": tema
     }
     
-    # Las 'credenciales' para que el Worker te deje pasar
     headers = {
         "Authorization": SECRET_TOKEN,
         "Content-Type": "application/json"
     }
 
     try:
-        # Realizamos la conexión
-        response = requests.post(WORKER_URL, json=payload, headers=headers, timeout=10)
+        # Usamos json.dumps para asegurar que el formato sea perfecto para el Worker
+        response = requests.post(
+            WORKER_URL, 
+            data=json.dumps(payload), 
+            headers=headers, 
+            timeout=15
+        )
         
-        if response.status_code == 200:
-            print("✅ ¡ÉXITO! Datos sincronizados con Genesis-IA.")
-            print(f"📡 Respuesta del servidor: {response.text}")
+        if response.status_code in [200, 201]:
+            print("✅ ¡ÉXITO! Valor registrado en WAR_STORAGE.")
+            print(f"🛰️ Respuesta: {response.text}")
+            return True
         elif response.status_code == 401:
-            print("🚫 ERROR DE SEGURIDAD: El SECRET_TOKEN es incorrecto.")
-            print("👉 Revisa el panel de 'Variables y Secretos' en Cloudflare.")
+            print("🚫 ERROR 401: Token no autorizado. Revisa el SECRET_TOKEN.")
         else:
             print(f"⚠️ ERROR {response.status_code}: {response.text}")
             
     except requests.exceptions.ConnectionError:
-        print("🔥 ERROR DE RED: No se pudo contactar con el Worker. Revisa tu internet.")
+        print("🔥 ERROR DE RED: Revisa tu conexión a internet en Táchira.")
     except Exception as e:
-        print(f"❓ ERROR INESPERADO: {e}")
+        print(f"❓ ERROR: {e}")
+    return False
 
 if __name__ == "__main__":
-    print("--- INICIANDO ORÁCULO GENESIS-IA ---")
+    print("--- 🚀 ORÁCULO WAR-TOKEN ACTIVADO ---")
     
-    # Valor de prueba (Pronto lo cambiaremos por una API real)
-    precio_actual = 2385.50 
+    # Aquí puedes poner el valor de tu investigación
+    valor_de_prueba = 2385.50 
+    tema_de_prueba = "Biotecnología y Fusión"
     
-    enviar_precio_oro(precio_actual)
-    print("--- FIN DE LA OPERACIÓN ---")
+    enviar_datos_al_nodo(valor_de_prueba, tema_de_prueba)
+    
+    print("--- 🏁 OPERACIÓN COMPLETADA ---")
+      
