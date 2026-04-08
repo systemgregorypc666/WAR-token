@@ -35,3 +35,20 @@ export default {
     });
   }
 };
+// 3. LÓGICA PARA VER DATOS (GET)
+    try {
+      // Obtenemos los datos específicos de tu nodo
+      const data = await env.WAR_STORAGE.get("System_Gregory_Tachira_01");
+      const parsedData = data ? JSON.parse(data) : { mensaje: "Sin datos aún" };
+
+      return new Response(JSON.stringify({
+        proyecto: "WAR-token",
+        estado_red: "Online",
+        ultimo_registro: parsedData,
+        timestamp_consulta: new Date().toISOString()
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
+    } catch (e) {
+      return new Response("Error leyendo base de datos", { status: 500 });
+    }
